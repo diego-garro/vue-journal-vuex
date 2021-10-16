@@ -20,7 +20,7 @@
   <div class="d-flex flex-column px-3 h-75">
     <textarea placeholder="¿Qué sucedió hoy?"></textarea>
   </div>
-  <Fab />
+  <Fab icon="fa-save" />
   <img
     src="https://www.cleverfiles.com/howto/wp-content/uploads/2018/03/minion.jpg"
     alt="entry-picture"
