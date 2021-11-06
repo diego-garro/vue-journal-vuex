@@ -7,7 +7,11 @@
         <span class="mx-2 fs-4 fw-light">{{ yearDay }}</span>
       </div>
       <div>
-        <button class="btn btn-danger mx-2">
+        <button
+          v-if="entry.id"
+          class="btn btn-danger mx-2"
+          @click="onDeleteEntry"
+        >
           Borrar
           <i class="fa fa-trash-alt"></i>
         </button>
@@ -27,12 +31,12 @@
       class="img-thumbnail"
     />
   </template>
-  <Fab icon="fa-save" />
+  <Fab icon="fa-save" @on:click="saveEntry" />
 </template>
 
 <script>
 import { defineAsyncComponent } from "vue"
-import { mapGetters } from "vuex" // computed
+import { mapGetters, mapActions } from "vuex" // computed
 
 import getDayMonthYear from "../helpers/getDayMonthYear"
 
@@ -67,11 +71,39 @@ export default {
     },
   },
   methods: {
+    ...mapActions("journal", ["updateEntry", "createEntry", "deleteEntry"]),
     loadEntry() {
-      const entry = this.getEntryById(this.id)
-      if (!entry) return this.$router.push({ name: "no-entry" })
+      let entry
+
+      if (this.id === "new") {
+        entry = {
+          text: "",
+          date: new Date().getTime(),
+        }
+      } else {
+        entry = this.getEntryById(this.id)
+        if (!entry) return this.$router.push({ name: "no-entry" })
+      }
 
       this.entry = entry
+    },
+    async saveEntry() {
+      if (this.entry.id) {
+        // Actualizar
+        await this.updateEntry(this.entry)
+      } else {
+        // Crear una nueva entrada
+        const id = await this.createEntry(this.entry)
+
+        this.$router.push({ name: "entry", params: { id } })
+      }
+    },
+    async onDeleteEntry() {
+      console.log("delete", this.entry)
+
+      await this.deleteEntry(this.entry.id)
+
+      this.$router.push({ name: "no-entry" })
     },
   },
   created() {
