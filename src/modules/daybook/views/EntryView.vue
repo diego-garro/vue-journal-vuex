@@ -7,6 +7,7 @@
         <span class="mx-2 fs-4 fw-light">{{ yearDay }}</span>
       </div>
       <div>
+        <input type="file" @change="onSelectedImage" />
         <button
           v-if="entry.id"
           class="btn btn-danger mx-2"
@@ -25,8 +26,14 @@
     <div class="d-flex flex-column px-3 h-75">
       <textarea v-model="entry.text" placeholder="¿Qué sucedió hoy?"></textarea>
     </div>
-    <img
+    <!-- <img
       src="https://www.cleverfiles.com/howto/wp-content/uploads/2018/03/minion.jpg"
+      alt="entry-picture"
+      class="img-thumbnail"
+    /> -->
+    <img
+      v-if="localimage"
+      :src="localimage"
       alt="entry-picture"
       class="img-thumbnail"
     />
@@ -54,6 +61,8 @@ export default {
   data() {
     return {
       entry: null,
+      localimage: null,
+      file: null,
     }
   },
   computed: {
@@ -126,6 +135,21 @@ export default {
         Swal.fire("Eliminado", "", "success")
       }
     },
+    onSelectedImage(event) {
+      const file = event.target.files[0]
+      if (!file) {
+        this.localimage = null
+        this.file = null
+        return
+      }
+
+      this.file = file
+
+      const fr = new FileReader()
+      fr.onload = () => (this.localimage = fr.result)
+      fr.readAsDataURL(file)
+    },
+    onSelectImage() {},
   },
   created() {
     this.loadEntry()
