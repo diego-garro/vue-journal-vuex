@@ -7,7 +7,13 @@
         <span class="mx-2 fs-4 fw-light">{{ yearDay }}</span>
       </div>
       <div>
-        <input type="file" @change="onSelectedImage" />
+        <input
+          type="file"
+          @change="onSelectedImage"
+          ref="imageSelector"
+          v-show="false"
+          accept="image/png, image/jpeg"
+        />
         <button
           v-if="entry.id"
           class="btn btn-danger mx-2"
@@ -16,7 +22,7 @@
           Borrar
           <i class="fa fa-trash-alt"></i>
         </button>
-        <button class="btn btn-primary">
+        <button class="btn btn-primary" @click="onSelectImage">
           Subir foto
           <i class="fa fa-upload"></i>
         </button>
@@ -149,7 +155,9 @@ export default {
       fr.onload = () => (this.localimage = fr.result)
       fr.readAsDataURL(file)
     },
-    onSelectImage() {},
+    onSelectImage() {
+      this.$refs.imageSelector.click()
+    },
   },
   created() {
     this.loadEntry()
