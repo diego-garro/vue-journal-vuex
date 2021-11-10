@@ -32,11 +32,12 @@
     <div class="d-flex flex-column px-3 h-75">
       <textarea v-model="entry.text" placeholder="¿Qué sucedió hoy?"></textarea>
     </div>
-    <!-- <img
-      src="https://www.cleverfiles.com/howto/wp-content/uploads/2018/03/minion.jpg"
+    <img
+      v-if="entry.picture && !localImage"
+      :src="entry.picture"
       alt="entry-picture"
       class="img-thumbnail"
-    /> -->
+    />
     <img
       v-if="localimage"
       :src="localimage"
@@ -53,6 +54,7 @@ import { mapGetters, mapActions } from "vuex" // computed
 import Swal from "sweetalert2"
 
 import getDayMonthYear from "../helpers/getDayMonthYear"
+import uploadImage from "../helpers/uploadImage"
 
 export default {
   props: {
@@ -110,6 +112,9 @@ export default {
       })
       Swal.showLoading()
 
+      const picture = await uploadImage(this.file)
+      this.entry.picture = picture
+
       if (this.entry.id) {
         // Actualizar
         await this.updateEntry(this.entry)
@@ -119,6 +124,7 @@ export default {
         this.$router.push({ name: "entry", params: { id } })
       }
 
+      this.file = null
       Swal.fire("Guardado", "Entrada registrada con éxito", "success")
     },
     async onDeleteEntry() {
