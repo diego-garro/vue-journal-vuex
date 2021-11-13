@@ -39,8 +39,8 @@
       class="img-thumbnail"
     />
     <img
-      v-if="localimage"
-      :src="localimage"
+      v-if="localImage"
+      :src="localImage"
       alt="entry-picture"
       class="img-thumbnail"
     />
@@ -57,6 +57,7 @@ import getDayMonthYear from "../helpers/getDayMonthYear"
 import uploadImage from "../helpers/uploadImage"
 
 export default {
+  name: "EntryView",
   props: {
     id: {
       type: String,
@@ -69,7 +70,7 @@ export default {
   data() {
     return {
       entry: null,
-      localimage: null,
+      localImage: null,
       file: null,
     }
   },
@@ -150,7 +151,7 @@ export default {
     onSelectedImage(event) {
       const file = event.target.files[0]
       if (!file) {
-        this.localimage = null
+        this.localImage = null
         this.file = null
         return
       }
@@ -158,7 +159,7 @@ export default {
       this.file = file
 
       const fr = new FileReader()
-      fr.onload = () => (this.localimage = fr.result)
+      fr.onload = () => (this.localImage = fr.result)
       fr.readAsDataURL(file)
     },
     onSelectImage() {
