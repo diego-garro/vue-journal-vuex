@@ -24,7 +24,7 @@ describe("Pruebas en el uploadImage", () => {
 
     // Tomar el ID
     const segments = url.split("/")
-    const imageId = segments[segments.length - 1].replace(".jpg", "")
+    const imageId = segments[segments.length - 1].replace(".png", "")
     cloudinary.v2.api.delete_resources(imageId, {}, () => {
       done()
     })
